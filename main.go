@@ -17,13 +17,14 @@ func main() {
 	// var p crypto.PublicKey
 	var s crypto.PrivateKey
 	po := os.Args[1:]
-	s, err := ioutil.ReadFile("xchange-sekret")
+	f := "~/xchange-sekret"
+	s, err := ioutil.ReadFile(f)
 	if err != nil {
 		// log.Fatal(err)
 
 		s, p, err := c25519.GenerateKey(rand.Reader)
 		ss := s.([32]byte)
-		ioutil.WriteFile("xchange-sekret", ss[:], 0644)
+		ioutil.WriteFile(f, ss[:], 0644)
 		if err != nil {
 			log.Fatal(err)
 		}
