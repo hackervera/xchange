@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"os/user"
 
 	"github.com/aead/ecdh"
 )
@@ -17,14 +18,22 @@ func main() {
 	// var p crypto.PublicKey
 	var s crypto.PrivateKey
 	po := os.Args[1:]
-	f := "~/xchange-sekret"
-	s, err := ioutil.ReadFile(f)
+	usr, err := user.Current()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	f := usr.HomeDir + "/xchange-sekret"
+	s, err = ioutil.ReadFile(f)
 	if err != nil {
 		// log.Fatal(err)
 
 		s, p, err := c25519.GenerateKey(rand.Reader)
+		if err != nil {
+			log.Fatal(err)
+		}
 		ss := s.([32]byte)
-		ioutil.WriteFile(f, ss[:], 0644)
+		err = ioutil.WriteFile(f, ss[:], 0644)
 		if err != nil {
 			log.Fatal(err)
 		}
